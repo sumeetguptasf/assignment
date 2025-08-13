@@ -1,7 +1,6 @@
 import {ApplicationConfig} from '@loopback/core';
 import {UserServiceApplication} from './application';
 
-const ARGV_INDEX = 2;
 /**
  * Export the OpenAPI spec from the application
  */
@@ -12,20 +11,13 @@ async function exportOpenApiSpec(): Promise<void> {
       host: process.env.HOST ?? 'localhost',
     },
   };
-  const outFile = process.argv[ARGV_INDEX] ?? './src/openapi.json';
+  const outFile = process.argv[2] ?? '';
   const app = new UserServiceApplication(config);
   await app.boot();
   await app.exportOpenApiSpec(outFile);
 }
 
-exportOpenApiSpec()
-  .then(() => {
-    process.exit(0);
-  })
-  .catch(err => {
-    console.error(
-      'Fail to export OpenAPI spec from the application.',
-      err,
-    );
-    process.exit(1);
-  });
+exportOpenApiSpec().catch(err => {
+  console.error('Fail to export OpenAPI spec from the application.', err);
+  process.exit(1);
+});

@@ -73,3 +73,45 @@ Please check out [LoopBack 4 documentation](https://loopback.io/doc/en/lb4/) to
 understand how you can continue to add features to this application.
 
 [![LoopBack](https://github.com/loopbackio/loopback-next/raw/master/docs/site/imgs/branding/Powered-by-LoopBack-Badge-(blue)-@2x.png)](http://loopback.io/)
+
+## Running the user service
+
+Request : 
+```
+{
+  "firstName": "Sumeet",
+  "lastName": "Gupta",
+  "email": "sumeet.gupta@sourcefuse.com",
+  "phone": "+91 7985220470",
+  "address": "HP, General Ganj, Kanpur - 208001"
+}
+```
+
+
+Response :
+```
+{
+  "userId": "a4769df4-6c32-42d4-85cc-42e8d444ebaf",
+  "firstName": "Sumeet",
+  "lastName": "Gupta",
+  "email": "sumeet.gupta@sourcefuse.com",
+  "phone": "+91 7985220470",
+  "address": "HP, General Ganj, Kanpur - 208001"
+}
+```
+
+curl : 
+
+```curl
+curl -X 'POST' \
+  'http://127.0.0.1:3000/users' \
+  -H 'accept: application/json' \
+  -H 'Content-Type: application/json' \
+  -d '{
+  "firstName": "Sumeet",
+  "lastName": "Gupta",
+  "email": "sumeet.gupta@sourcefuse.com",
+  "phone": "+91 7985220470",
+  "address": "HP, General Ganj, Kanpur - 208001"
+}'
+```

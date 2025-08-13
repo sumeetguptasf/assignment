@@ -1,0 +1,74 @@
+services:
+  postgres:
+    image: postgres:16
+    container_name: postgres-container
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: productdb
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    restart: unless-stopped
+  
+  user-service:
+    build:
+      context: ./services/user-service
+      dockerfile: Dockerfile
+    container_name: user-service-container
+    env_file:
+      - ./services/user-service/.env.docker
+    ports:
+      - "3002:3002"
+    depends_on:
+      - postgres
+    restart: unless-stopped
+  order-service:
+    build:
+      context: ./services/order-service
+      dockerfile: Dockerfile
+    container_name: order-service-container
+    env_file:
+      - ./services/order-service/.env.docker
+    ports:
+      - "3003:3003"
+    depends_on:
+      - postgres
+    restart: unless-stopped
+  product-service:
+    build:
+      context: ./services/product-service
+      dockerfile: Dockerfile
+    container_name: product-service-container
+    env_file:
+      - ./services/product-service/.env.docker
+    ports:
+      - "3001:3001"
+    depends_on:
+      - postgres
+    restart: unless-stopped 
+  api-gateway:
+    build:
+      context: ./services/store-facade
+      dockerfile: Dockerfile
+    container_name: api-gateway-container
+    env_file:
+      - ./services/store-facade/.env.docker
+    # environment:
+    #   - API_GATEWAY_NAME=store-facade
+    #   - USER_SERVICE_URL=http://user-service:3002
+    #   - ORDER_SERVICE_URL=http://order-service:3003
+    #   - PRODUCT_SERVICE_URL=http://product-service:3001
+    #   - PORT=3000
+    #   - HOST=localhost
+    ports:
+      - "3000:3000"
+    depends_on:
+      - user-service
+      - order-service
+      - product-service
+    restart: unless-stopped
+
+volumes:
+  postgres_data:

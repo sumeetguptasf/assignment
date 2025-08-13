@@ -18,7 +18,10 @@
         "db:migrate-reset:chat-service": "db-migrate reset --config 'chat-service/database.json' -m 'chat-service/migrations'",
         "db:migrate:notification-service": "db-migrate up --config 'notification-service/database.json' -m 'notification-service/migrations'",
         "db:migrate-down:notification-service": "db-migrate down --config 'notification-service/database.json' -m 'notification-service/migrations'",
-        "db:migrate-reset:notification-service": "db-migrate reset --config 'notification-service/database.json' -m 'notification-service/migrations'"
+        "db:migrate-reset:notification-service": "db-migrate reset --config 'notification-service/database.json' -m 'notification-service/migrations'",
+        "db:migrate:authentication-service": "db-migrate up --config 'authentication-service/database.json' -m 'authentication-service/migrations'",
+        "db:migrate-down:authentication-service": "db-migrate down --config 'authentication-service/database.json' -m 'authentication-service/migrations'",
+        "db:migrate-reset:authentication-service": "db-migrate reset --config 'authentication-service/database.json' -m 'authentication-service/migrations'"
     },
     "author": "",
     "license": "ISC",

@@ -1,8 +1,7 @@
 import {ApplicationConfig, UserServiceApplication} from './application';
-
+import * as dotenv from 'dotenv';
+dotenv.config(); // Load .env before anything else
 export * from './application';
-
-const PORT = 3000;
 
 export async function main(options: ApplicationConfig = {}) {
   const app = new UserServiceApplication(options);
@@ -20,8 +19,8 @@ if (require.main === module) {
   // Run the application
   const config = {
     rest: {
-      port: +(process.env.PORT ?? PORT),
-      host: process.env.HOST,
+      port: +(process.env.PORT ?? 3000),
+      host: process.env.HOST || '127.0.0.1',
       // The `gracePeriodForClose` provides a graceful close for http/https
       // servers with keep-alive clients. The default value is `Infinity`
       // (don't force-close). If you want to immediately destroy all sockets
