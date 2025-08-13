@@ -153,7 +153,6 @@ export class UserController {
     return this.userRepository.updateAll(user, where);
   }
 
-  @deprecated(true)
   @get('/users/{id}')
   @response(200, {
     description: 'User model instance',
@@ -163,31 +162,39 @@ export class UserController {
       },
     },
   })
-  async findByIdOld(
+  async findById(
     @param.path.string('id') id: string,
     @param.filter(User, { exclude: 'where' }) filter?: FilterExcludingWhere<User>
   ): Promise<User> {
-    return this.userRepository.findById(id, filter);
+    const defaultInclude = [{ relation: 'userCredentials' }];
+
+  // Merge any filter from client with our default include
+  const finalFilter: FilterExcludingWhere<User> = {
+    ...filter,
+    include: [...(filter?.include ?? []), ...defaultInclude],
+  };
+
+    return this.userRepository.findById(id, finalFilter);
   }
 
-  @authenticate('jwt')
-  @get('/users/{id}')
-  @response(200, {
-    description: 'User model instance',
-    content: {
-      'application/json': {
-        schema: getModelSchemaRef(User, {includeRelations: true}),
-      },
-    },
-  })
-  async findById(
-    @param.path.string('id') id: string,
-    @param.filter(User, {exclude: 'where'}) filter?: FilterExcludingWhere<User>
-  ): Promise<User> {
-    return this.userRepository.findById(id, filter);
-  }
 
-  @authenticate('jwt')
+  // @get('/users/{id}')
+  // @response(200, {
+  //   description: 'User model instance',
+  //   content: {
+  //     'application/json': {
+  //       schema: getModelSchemaRef(User, {includeRelations: true}),
+  //     },
+  //   },
+  // })
+  // async findById(
+  //   @param.path.string('id') id: string,
+  //   @param.filter(User, {exclude: 'where'}) filter?: FilterExcludingWhere<User>
+  // ): Promise<User> {
+  //   return this.userRepository.findById(id, filter);
+  // }
+
+
   @patch('/users/{id}')
   @response(204, {
     description: 'User PATCH success',

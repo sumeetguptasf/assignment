@@ -94,6 +94,18 @@ Body:
   "role": "SuperAdmin",
   "password": "password"
 }
+{
+  "id": "ce848c5d-e6bc-4c56-8a4a-056cba4c53d2",
+  "username": "sumeetg",
+  "firstName": "Sumeet",
+  "middleName": "Kumar",
+  "lastName": "Gupta",
+  "email": "sumeetkumargupta@gmail.com",
+  "phone": "7985220470",
+  "address": "48 jk l",
+  "role": "SuperAdmin",
+  "created_at": "2025-08-13T19:22:48.794Z"
+}
 Response:
 {
   "id": "7b208acb-be9e-4ec6-ab29-8b6b1e34c3fe",
@@ -107,3 +119,20 @@ Response:
   "role": "SuperAdmin",
   "created_at": "2025-08-13T08:29:31.521Z"
 }
+for email : sumeetkumargupta@gmail.com. | valid : 1 day
+{
+  "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImNlODQ4YzVkLWU2YmMtNGM1Ni04YTRhLTA1NmNiYTRjNTNkMiIsImVtYWlsIjoic3VtZWV0a3VtYXJndXB0YUBnbWFpbC5jb20iLCJpYXQiOjE3NTUxMTgxMzQsImV4cCI6MTc1NTIwNDUzNH0.cd_9QBzEjskhBLGCluDy0ecq1eO7t1vHX_uI5m72mOM"
+}
+
+------------------------
+Auth flow across services:
+
+	1.	User logs in → login() issues JWT signed with process.env.JWT_SECRET.
+	2.	Client sends token to any service.
+	3.	That service calls jwt.verify(token, process.env.JWT_SECRET) internally.
+	4.	If valid, request is authenticated — without calling user-service.
+
+// DESIGN
+
+1. the product service is not directly accessible , so only facade service will call all the required product apis ,
+authorization can effectively be implemented only in facade service.

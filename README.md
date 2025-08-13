@@ -133,3 +133,17 @@ Release
 ```sh
 HUSKY_SKIP_HOOKS=1 lerna version --conventional-commits --conventional-graduate
 ```
+
+## Repo Information
+
+from ARC root folder :
+
+```bash
+npm run migrate -- --service notification-service
+```
+
+using db-migrate:
+```bash
+cd packages/migrations/notification-service
+npm run migrate up
+```

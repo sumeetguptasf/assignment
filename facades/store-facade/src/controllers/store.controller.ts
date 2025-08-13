@@ -4,14 +4,15 @@ import { getService } from '@loopback/service-proxy';
 import { ProductServiceDataSource } from '../datasources/product-service.datasource';
 import { OrderServiceDataSource } from '../datasources/order-service.datasource';
 import { UserServiceDataSource } from '../datasources/user-service.datasource';
-import { ProductService } from '../services/product-service.interface';
-import { OrderService } from '../services/order-service.interface';
-import { UserService } from '../services/user-service.interface';
+import { ProductService } from '../services/product.service.interface';
+import { OrderService } from '../services/order.service.interface';
+import { UserService } from '../services/user.service.interface';
 import { Order } from '../models/order.model';
 import { Product } from '../models';
-import {ratelimit} from 'loopback4-ratelimiter';
+import { ratelimit } from 'loopback4-ratelimiter';
 import { User } from '../models/user.model';
 import { rateLimitKeyGen } from '../utils/rate-limit-keygen.util';
+import { authenticate } from '@loopback/authentication';
 
 @injectable()
 export class StoreFacadeController implements LifeCycleObserver {
@@ -56,22 +57,42 @@ export class StoreFacadeController implements LifeCycleObserver {
     return { product, orders };
   }
 
+  @authenticate('jwt')
   @ratelimit(true)
-  @get('facades/users/{userId}/orders')
+  @get('facade/users/{userId}/orders', {
+    responses: {
+      '200': {
+        description: 'Aggregated user + orders',
+        content: {
+          'application/json': {
+            schema: {
+              type: 'object',
+              properties: {
+                user: { type: 'object' },
+                orders: { type: 'array', items: { type: 'object' } },
+              },
+            },
+          },
+        },
+      },
+    },
+  })
   async getOrdersForUser(
     @param.path.string('userId') userId: string,
   ): Promise<{ user: User; orders: Order[] }> {
-  const userService = await getService<UserService>(this.userDataSource);
-  const orderService = await getService<OrderService>(this.orderDataSource);
+    const userService = await getService<UserService>(this.userDataSource);
+    const orderService = await getService<OrderService>(this.orderDataSource);
 
-  // Fetch the user
-  const user = await userService.getUserById(userId);
-  if (!user) {
-    throw new Error(`User with id ${userId} not found`);
-  }
+    // Fetch the user
+    const user = await userService.getUserById(userId);
+    if (!user) {
+      throw new Error(`User with id ${userId} not found`);
+    }
 
-  // Fetch the orders for the user
-  const orders = await orderService.getOrdersByUserId(userId);
-  return { user, orders };
+    // Fetch the orders for the user
+    const orders = await orderService.getOrdersByUserId(userId);
+    // Return user after removing userCredentials relation and orders
+    const { userCredentials: UserCredentials, ...safeUser } = user;
+    return { user: safeUser, orders };
   }
 }

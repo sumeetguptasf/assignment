@@ -14,10 +14,12 @@ import { RateLimiterComponent, RateLimitSecurityBindings } from 'loopback4-ratel
 import Redis from 'ioredis';
 import { rateLimitKeyGen } from './utils/rate-limit-keygen.util';
 import {redisRateLimiter} from './middleware/redis-rate-limiter.middleware';
-
+import {AuthenticationComponent, registerAuthenticationStrategy} from '@loopback/authentication';
+import {JWTAuthenticationComponent, JWTAuthenticationStrategy, JWTService, TokenServiceBindings} from '@loopback/authentication-jwt';
 
 export { ApplicationConfig };
-
+import * as dotenv from 'dotenv';
+dotenv.config();
 export class StoreFacadeApplication extends BootMixin(
   ServiceMixin(RepositoryMixin(RestApplication)),
 ) {
@@ -25,35 +27,49 @@ export class StoreFacadeApplication extends BootMixin(
     super(options);
 
 
-
+    // RATE LIMITER CONFIGURATION
     const redisClient = new Redis({
-      host: '127.0.0.1',
-      port: 6379,
-      password: 'redispassword',
+      host: process.env.REDIS_HOST || '127.0.0.1',
+      port: Number(process.env.REDIS_PORT) || 6379,
     });
     // this.middleware(inMemoryRateLimiter);
-    this.middleware(redisRateLimiter);
-    // this.component(RateLimiterComponent as any);
+    // this.middleware(redisRateLimiter);
+    this.component(RateLimiterComponent as any);
 
       // using redis as the store
+    this.bind(RateLimitSecurityBindings.CONFIG).to({
+      name: 'redis',
+      type: 'RedisStore',
+      storeClient: redisClient,
+      points: 2,
+      duration: 60,
+      skipFailedRequests: false,
+      keyGenerator: rateLimitKeyGen,
+    });
+
     // this.bind(RateLimitSecurityBindings.CONFIG).to({
-    //   name: 'redis',
-    //   type: 'RedisStore',
-    //   storeClient: redisClient,
-    //   points: 2,
+    //   name: 'inMemory',
+    //   type: 'InMemoryStore',
+    //   points: 10,
     //   duration: 60,
     //   skipFailedRequests: false,
     //   keyGenerator: rateLimitKeyGen,
     // });
 
-    this.bind(RateLimitSecurityBindings.CONFIG).to({
-      name: 'inMemory',
-      type: 'InMemoryStore',
-      points: 10,
-      duration: 60,
-      skipFailedRequests: false,
-      keyGenerator: rateLimitKeyGen,
-    });
+    // AUTHENTICATION CONFIGURATION
+    this.component(AuthenticationComponent);
+    this.component(JWTAuthenticationComponent);
+    // Register the JWT strategy
+    registerAuthenticationStrategy(this, JWTAuthenticationStrategy);
+      // this.bind('authentication.jwt.secret').to(process.env.JWT_SECRET ?? '');
+      // this.bind('authentication.jwt.expiresIn').to('86400'); // optional, expiry in seconds
+      // this.bind('authentication.jwt.service').toClass(JWTService);
+    // Bind JWT configuration
+    this.bind(TokenServiceBindings.TOKEN_SECRET).to(process.env.JWT_SECRET ?? '');
+    this.bind(TokenServiceBindings.TOKEN_EXPIRES_IN).to(process.env.JWT_EXPIRES_IN ?? '86400');
+    this.bind(TokenServiceBindings.TOKEN_SERVICE).toClass(JWTService);
+
+    
 
     // Now set the sequence
     this.sequence(MySequence);

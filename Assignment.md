@@ -35,7 +35,7 @@ Day 7:
 
 Day 8:
 - Generate an ARC-based chat-service or notification-service with Arc CLI. ✅
-- Configure environment variables (DB credentials, host/port). 
+- Configure environment variables (DB credentials, host/port). ✅
 - In store-facade, define REST datasources for the new ARC microservices. 
 - Create a façade endpoint that triggers a chat or notification upon events like new user sign-up or new order. 
 - Test a full flow: user logs in via ARC auth, triggers a protected action, if they spam calls ARC rate-limiting blocks them, if order completes ARC sends a notification.
@@ -50,7 +50,11 @@ Day 10:
 - Remove any partial custom solutions that overlap with ARC’s modules, avoiding duplication in rate limiting or auth. 
 - Review environment variable usage across all services to confirm consistency (dev vs. staging vs. prod).
 Day 11:
-- Walk through user scenarios: 1) user logs in via ARC auth, 2) creates a product or places an order, 3) triggers an ARC-based notification if you integrated notification-service, 4) check if repeated calls are rate-limited. 
+- Walk through user scenarios: 
+1) user logs in via ARC auth, 
+2) creates a product or places an order, 
+3) triggers an ARC-based notification if you integrated notification-service, 
+4) check if repeated calls are rate-limited. 
 - Adjust naming or error codes for clarity (like standardizing 400 vs. 401 vs. 403, etc.). 
 - Ensure domain logic (e.g., store flows) is consistent across all microservices.
 Day 12:
@@ -78,3 +82,10 @@ Could not resolve dependency:
 
 
 2. better to use express rate-limiter - more flexible.
+
+
+[new]
+3. How to authenticate me from any other service like store-facade-service, since the jwt authenticate is happening inside user service
+-> using /whoAmI api , authorized access will make it poossible to access the respource
+
+4. Authorization will be handled by the same user service - with authorization end-points which wil check the role of user - SuperAdmin, Admin, etc.

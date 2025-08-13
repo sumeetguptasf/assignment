@@ -6,7 +6,7 @@ import { juggler } from "@loopback/repository";
   connector: 'rest',
   baseUrl: process.env.PRODUCT_SERVICE_URL || 'http://localhost:3001',
   ssl: process.env.DB_SSL === 'true' ? { rejectUnauthorized: false } : false,
-  crud: false,
+  crud: true,
   operations: [
     {
       template: {

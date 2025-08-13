@@ -1,26 +1,27 @@
-import {BootMixin} from '@loopback/boot';
-import {ApplicationConfig} from '@loopback/core';
+import { BootMixin } from '@loopback/boot';
+import { ApplicationConfig } from '@loopback/core';
 import {
   RestExplorerBindings,
   RestExplorerComponent,
 } from '@loopback/rest-explorer';
-import {RepositoryMixin} from '@loopback/repository';
-import {RestApplication} from '@loopback/rest';
-import {ServiceMixin} from '@loopback/service-proxy';
-
-import {AuthenticationComponent} from '@loopback/authentication';
+import { RepositoryMixin } from '@loopback/repository';
+import { RestApplication } from '@loopback/rest';
+import { ServiceMixin } from '@loopback/service-proxy';
+import { AuthenticationComponent } from '@loopback/authentication';
 import {
   JWTAuthenticationComponent,
+  JWTService,
+  TokenServiceBindings,
   UserServiceBindings,
 } from '@loopback/authentication-jwt';
-import {UserCredentialsRepository, UserRepository} from './repositories';
-import {MyUserService} from './services';
+import { UserCredentialsRepository, UserRepository } from './repositories';
+import { MyUserService } from './services';
 import path from 'path';
-import {MySequence} from './sequence';
+import { MySequence } from './sequence';
 import { DbDataSource } from './datasources';
 
 
-export {ApplicationConfig};
+export { ApplicationConfig };
 
 export class UserServiceApplication extends BootMixin(
   ServiceMixin(RepositoryMixin(RestApplication)),
@@ -40,7 +41,12 @@ export class UserServiceApplication extends BootMixin(
     // Mount jwt component
     this.component(JWTAuthenticationComponent);
 
-    // Bind user service
+    // Bind TokenService
+    this.bind(TokenServiceBindings.TOKEN_SECRET).to(process.env.JWT_SECRET ?? '');
+    this.bind(TokenServiceBindings.TOKEN_EXPIRES_IN).to(process.env.JWT_EXPIRES_IN ?? '86400');
+    this.bind(TokenServiceBindings.TOKEN_SERVICE).toClass(JWTService);
+
+    // Bind UserService
     this.bind(UserServiceBindings.USER_SERVICE).toClass(MyUserService as any);
     // Bind user and credentials repository
     this.bind(UserServiceBindings.USER_REPOSITORY).toClass(UserRepository);
