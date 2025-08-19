@@ -1,0 +1,15 @@
+{
+  "name": "@arc/common",
+  "version": "1.0.0",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "lb-tsc"
+  },
+  "dependencies": {
+    "@loopback/authentication": "^12.0.5",
+    "@loopback/authentication-jwt": "^0.16.5",
+    "@loopback/security": "^0.12.4",
+    "jsonwebtoken": "^9.0.2"
+  }
+}
