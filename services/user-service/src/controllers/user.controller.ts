@@ -30,9 +30,10 @@ import { inject } from '@loopback/core';
 import { genSalt, hash } from 'bcryptjs';
 import { authenticate, TokenService } from '@loopback/authentication';
 import { MyUserService } from '../services/user.service';
-import { UserProfile, SecurityBindings, securityId } from '@loopback/security';
+import { SecurityBindings, securityId } from '@loopback/security';
+import { UserProfile } from '../models';
 import { RequestContext } from '@loopback/rest';
-import { deprecate } from 'util';
+import { MyJWTService } from '../services/my-token.service';
 
 
 const CredentialsSchema: SchemaObject = {
@@ -69,10 +70,8 @@ export const CredentialsRequestBody = {
 
 export class UserController {
   constructor(
-    // @repository(UserRepository)
-    // public userRepository : UserRepository,
     @inject(TokenServiceBindings.TOKEN_SERVICE)
-    public jwtService: TokenService,
+    public jwtService: MyJWTService,
     @inject(UserServiceBindings.USER_SERVICE)
     public userService: MyUserService,
     @inject(UserServiceBindings.USER_REPOSITORY)
@@ -176,24 +175,6 @@ export class UserController {
 
     return this.userRepository.findById(id, finalFilter);
   }
-
-
-  // @get('/users/{id}')
-  // @response(200, {
-  //   description: 'User model instance',
-  //   content: {
-  //     'application/json': {
-  //       schema: getModelSchemaRef(User, {includeRelations: true}),
-  //     },
-  //   },
-  // })
-  // async findById(
-  //   @param.path.string('id') id: string,
-  //   @param.filter(User, {exclude: 'where'}) filter?: FilterExcludingWhere<User>
-  // ): Promise<User> {
-  //   return this.userRepository.findById(id, filter);
-  // }
-
 
   @patch('/users/{id}')
   @response(204, {
@@ -349,6 +330,7 @@ export class UserController {
 
     // convert a User object into a UserProfile object (reduced set of properties)
     const userProfile = this.userService.convertToUserProfile(user);
+    console.log('User profile:', userProfile);
 
     // create a JSON Web Token based on the user profile
     const token = await this.jwtService.generateToken(userProfile);

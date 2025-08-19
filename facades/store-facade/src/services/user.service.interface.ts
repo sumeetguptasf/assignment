@@ -12,4 +12,5 @@ export interface UserService {
     authenticateUser(email: string, password: string): Promise<User | null>;
     changePassword(userId: string, oldPassword: string, newPassword: string): Promise<boolean>;
     resetPassword(email: string): Promise<boolean>;
+    // add signup and login
 }

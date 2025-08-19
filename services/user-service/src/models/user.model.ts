@@ -1,5 +1,6 @@
 import { Entity, hasOne, model, property } from '@loopback/repository';
 import { UserCredentials } from './user-credentials.model';
+import { Principal } from '@loopback/security/dist/types';
 
 @model({
   settings: {
@@ -112,3 +113,11 @@ export interface UserRelations {
 }
 
 export type UserWithRelations = User & UserRelations;
+
+
+export interface UserProfile extends Principal {
+    email?: string;
+    username?: string;
+    id?: string;
+    role?: string;
+}

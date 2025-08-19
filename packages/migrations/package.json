@@ -21,7 +21,10 @@
         "db:migrate-reset:notification-service": "db-migrate reset --config 'notification-service/database.json' -m 'notification-service/migrations'",
         "db:migrate:authentication-service": "db-migrate up --config 'authentication-service/database.json' -m 'authentication-service/migrations'",
         "db:migrate-down:authentication-service": "db-migrate down --config 'authentication-service/database.json' -m 'authentication-service/migrations'",
-        "db:migrate-reset:authentication-service": "db-migrate reset --config 'authentication-service/database.json' -m 'authentication-service/migrations'"
+        "db:migrate-reset:authentication-service": "db-migrate reset --config 'authentication-service/database.json' -m 'authentication-service/migrations'",
+        "db:migrate:arc-user-service": "db-migrate up --config 'arc-user-service/database.json' -m 'arc-user-service/migrations'",
+        "db:migrate-down:arc-user-service": "db-migrate down --config 'arc-user-service/database.json' -m 'arc-user-service/migrations'",
+        "db:migrate-reset:arc-user-service": "db-migrate reset --config 'arc-user-service/database.json' -m 'arc-user-service/migrations'"
     },
     "author": "",
     "license": "ISC",

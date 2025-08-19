@@ -1,12 +1,12 @@
-import { BootMixin } from '@loopback/boot';
-import { ApplicationConfig } from '@loopback/core';
+import {BootMixin} from '@loopback/boot';
+import {ApplicationConfig} from '@loopback/core';
 import {
   RestExplorerBindings,
   RestExplorerComponent,
 } from '@loopback/rest-explorer';
 import * as dotenv from 'dotenv';
 import * as dotenvExt from 'dotenv-extended';
-import { AuthenticationComponent } from 'loopback4-authentication';
+import {AuthenticationComponent} from 'loopback4-authentication';
 import {
   AuthorizationBindings,
   AuthorizationComponent,
@@ -20,14 +20,14 @@ import {
   BearerVerifierType,
   SECURITY_SCHEME_SPEC,
 } from '@sourceloop/core';
-import { NotificationServiceComponent , NotifServiceBindings } from '@sourceloop/notification-service';
-import { RepositoryMixin } from '@loopback/repository';
-import { RestApplication } from '@loopback/rest';
-import { ServiceMixin } from '@loopback/service-proxy';
+import {NotificationServiceComponent} from '@sourceloop/notification-service'
+import {RepositoryMixin} from '@loopback/repository';
+import {RestApplication} from '@loopback/rest';
+import {ServiceMixin} from '@loopback/service-proxy';
 import path from 'path';
 import * as openapi from './openapi.json';
-import { LocalNotificationProvider } from './providers/local-notification.provider';
-export { ApplicationConfig };
+
+export {ApplicationConfig};
 
 export class NotificationServiceApplication extends BootMixin(
   ServiceMixin(RepositoryMixin(RestApplication)),
@@ -60,15 +60,15 @@ export class NotificationServiceApplication extends BootMixin(
     // To check if authorization is enabled for swagger stats or not
     const authentication =
       process.env.SWAGGER_USER && process.env.SWAGGER_PASSWORD ? true : false;
-    const obj = {
-      enableObf,
-      obfPath: process.env.OBF_PATH ?? '/obf',
-      openapiSpec: openapi,
-      authentication: authentication,
-      swaggerUsername: process.env.SWAGGER_USER,
-      swaggerPassword: process.env.SWAGGER_PASSWORD,
-
-    }
+      const obj={
+        enableObf,
+        obfPath: process.env.OBF_PATH ?? '/obf',
+        openapiSpec: openapi,
+        authentication: authentication,
+        swaggerUsername: process.env.SWAGGER_USER,
+        swaggerPassword: process.env.SWAGGER_PASSWORD,
+        
+      }
     this.bind(SFCoreBindings.config).to(obj);
 
     // Set up the custom sequence
@@ -76,11 +76,8 @@ export class NotificationServiceApplication extends BootMixin(
 
     // Add authentication component
     this.component(AuthenticationComponent);
-    // add Component for NotificationService
-    this.component(NotificationServiceComponent);
-    // Add local notification provider
-    this.bind(NotifServiceBindings.Config).toProvider(LocalNotificationProvider as any);
- 
+  this.component(NotificationServiceComponent);
+
     // Add bearer verifier component
     this.bind(BearerVerifierBindings.Config).to({
       type: BearerVerifierType.service,
@@ -124,7 +121,7 @@ export class NotificationServiceApplication extends BootMixin(
       components: {
         securitySchemes: SECURITY_SCHEME_SPEC,
       },
-      servers: [{ url: '/' }],
+      servers: [{url: '/'}],
     });
   }
 }

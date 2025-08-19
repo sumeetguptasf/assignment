@@ -1,6 +1,6 @@
 import {injectable, inject} from '@loopback/core';
 import {Product} from '../models/product.model';
-import {ProductService} from './product.service.interface';
+import {ProductService} from './product.service.provider';
 import {ProductServiceDataSource} from '../datasources/product-service.datasource';
 
 @injectable()

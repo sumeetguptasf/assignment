@@ -1,0 +1,22 @@
+import {inject, Provider} from '@loopback/core';
+import {UserServiceDataSource} from '../datasources';
+
+export interface UserService {
+  signup(body: object): Promise<object>;
+  login(body: object): Promise<object>;
+  getUserById(id: string): Promise<object>;
+  updateUser(id: string, body: object): Promise<object>;
+  deleteUser(id: string): Promise<object>;
+  findAll(): Promise<object[]>;
+}
+
+export class UserServiceProvider implements Provider<UserService> {
+  constructor(
+    @inject('datasources.userService')
+    protected dataSource: UserServiceDataSource = new UserServiceDataSource(),
+  ) {}
+
+  value(): UserService {
+    return (this.dataSource as any);
+  }
+}

@@ -156,7 +156,8 @@ Doubt :
 - In store-facade, define REST datasources to call product- and order-service, plus service proxies for typed methods.✅
 - Implement a StoreController that aggregates product & order data. Test the façade endpoints to confirm combined results.✅
 - Create a decorator @FormattedDate() for createdOn / modifiedOn fields.
-
+- [ASK] what is the correct way of defining the sequence , eg. authentication then authorization etc.
+- [ASK] should we use middleware and middlewareSequence or Actions for this, eg. authentication then authorization etc.
 
 
 Findings : 

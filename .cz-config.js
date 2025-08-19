@@ -25,6 +25,8 @@ module.exports = {
   ],
 
   scopes: [
+{name: 'authentication'}, 
+{name: 'arc-user-service-service'}, 
 {name: 'authentication-service-service'}, 
 {name: 'notification-service-service'}, 
 {name: 'chat-service-service'}, 

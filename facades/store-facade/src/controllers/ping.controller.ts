@@ -1,3 +1,4 @@
+import { authenticate } from '@loopback/authentication';
 import {inject} from '@loopback/core';
 import {
   Request,
@@ -6,7 +7,8 @@ import {
   response,
   ResponseObject,
 } from '@loopback/rest';
-
+import {SecurityBindings} from '@loopback/security';
+import { UserProfile } from '../models';
 /**
  * OpenAPI response for ping()
  */
@@ -38,7 +40,8 @@ const PING_RESPONSE: ResponseObject = {
  * A simple controller to bounce back http requests
  */
 export class PingController {
-  constructor(@inject(RestBindings.Http.REQUEST) private req: Request) {}
+  constructor(@inject(RestBindings.Http.REQUEST) private req: Request,
+@inject(SecurityBindings.USER) private currentUser: UserProfile,) {}
 
   // Map to `GET /ping`
   @get('/ping')
@@ -51,5 +54,9 @@ export class PingController {
       url: this.req.url,
       headers: Object.assign({}, this.req.headers),
     };
+  }
+  @authenticate('jwt')
+  async whoAmI(): Promise<object> {
+    return this.currentUser;
   }
 }

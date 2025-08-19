@@ -19,6 +19,7 @@ import { MyUserService } from './services';
 import path from 'path';
 import { MySequence } from './sequence';
 import { DbDataSource } from './datasources';
+import { MyJWTService } from './services/my-token.service';
 
 
 export { ApplicationConfig };
@@ -43,8 +44,8 @@ export class UserServiceApplication extends BootMixin(
 
     // Bind TokenService
     this.bind(TokenServiceBindings.TOKEN_SECRET).to(process.env.JWT_SECRET ?? '');
-    this.bind(TokenServiceBindings.TOKEN_EXPIRES_IN).to(process.env.JWT_EXPIRES_IN ?? '86400');
-    this.bind(TokenServiceBindings.TOKEN_SERVICE).toClass(JWTService);
+    // this.bind(TokenServiceBindings.TOKEN_EXPIRES_IN).to(Number(process.env.JWT_EXPIRES_IN) ?? 86400);
+    this.bind(TokenServiceBindings.TOKEN_SERVICE).toClass(MyJWTService);
 
     // Bind UserService
     this.bind(UserServiceBindings.USER_SERVICE).toClass(MyUserService as any);

@@ -2,10 +2,11 @@ import {UserService} from '@loopback/authentication';
 import {Credentials} from '@loopback/authentication-jwt';
 import {repository} from '@loopback/repository';
 import {HttpErrors} from '@loopback/rest';
-import {securityId, UserProfile} from '@loopback/security';
+import {securityId} from '@loopback/security';
 import {compare} from 'bcryptjs';
 import {CustomCredentials, User, UserWithRelations} from '../models';
 import {UserRepository} from '../repositories';
+import {UserProfile} from '../models/user.model';
 
 export class MyUserService implements UserService<User, Credentials> {
   constructor(
@@ -72,9 +73,10 @@ export class MyUserService implements UserService<User, Credentials> {
   convertToUserProfile(user: User): UserProfile {
     return {
       [securityId]: user.id?.toString() ?? '',
-      name: user.name,
+      username: user.username,
       id: user.id,
       email: user.email,
+      role: user.role,
     };
   }
 

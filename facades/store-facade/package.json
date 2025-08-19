@@ -53,6 +53,7 @@
   "dependencies": {
     "@loopback/authentication": "^12.0.5",
     "@loopback/authentication-jwt": "^0.16.5",
+    "@loopback/authorization": "^0.16.4",
     "@loopback/boot": "^8.0.3",
     "@loopback/core": "^7.0.2",
     "@loopback/repository": "^8.0.2",
@@ -63,6 +64,7 @@
     "express-rate-limit": "^8.0.1",
     "ioredis": "^5.7.0",
     "loopback-connector-rest": "^5.0.8",
+    "loopback4-authorization": "^7.0.3",
     "loopback4-ratelimiter": "^7.0.6",
     "rate-limit-redis": "^4.2.1",
     "rate-limiter-flexible": "^7.2.0",

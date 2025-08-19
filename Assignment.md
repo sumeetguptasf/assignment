@@ -18,13 +18,13 @@ Day 4:
 - lb4 app for services/user-service; define User model with role enum, plus UserRepository. ✅
 - Create a decorator @FormattedDate() for createdOn / modifiedOn fields. ✅
 - Optionally build a GenericRepository<T> for advanced TypeScript usage.
-- Integrate store-facade with user-service via another REST datasource if you want to fetch user data or roles.
+- Integrate store-facade with user-service via another REST datasource if you want to fetch user data or roles.✅
 Day 5:
 - Reading: Go through ARC Docs to see which core modules and microservices are available (auth-service, rate-limiter, secure sequences, notifications,etc.).  ✅
 - Install Arc CLI globally and run a short demo generating or installing an ARC-based microservice. ✅ | User Tenant Service 
 - Discuss how ARC’s modules compare to your local LB4 code and decide which ones to adopt (e.g., replace custom user-service with ARC’s user-service, or keep your own). ✅ :: the arc user service is composite user - tenant based service, can be managed with multiple user in same tenant for single tenant systems , also it can handle multitenancy. The endpoints are already secured with JWT based tokens so simply using arc authentication and authorzation services with user-tenant service will make it work.
 Day 6:
-- Install the ARC authentication and authorization packages in store-facade (and/or user-service if relevant).
+- Install the ARC authentication and authorization packages in store-facade (and/or user-service if relevant).✅
 - Configure them in the LB4 application: e.g., load ARC auth strategies for JWT, specify role checks in the façade endpoints.
 - Restrict certain routes (e.g., product creation) to Admin or SuperAdmin using ARC’s decorators or metadata-based checks.
 - Test that calls without valid tokens or roles are blocked, confirming ARC’s built-in logic is engaged.
@@ -32,7 +32,6 @@ Day 7:
 - Install ARC’s rate-limiter module in store-facade, configure it to use Redis or in-memory if needed.✅
 - Replace or enhance the LB4 sequence in store-facade with ARC secure sequences, ensuring rate-limit checks are automatically applied.✅
 - Verify repeated or high-traffic calls from the same user or IP get a 429 error, demonstrating ARC’s rate-limiting is active. No custom interceptor code—just ARC config.✅
-
 Day 8:
 - Generate an ARC-based chat-service or notification-service with Arc CLI. ✅
 - Configure environment variables (DB credentials, host/port). ✅
@@ -42,19 +41,19 @@ Day 8:
 Day 9:
 - lb4 app for services/external-service; set up a REST datasource or OpenAPI connector referencing a public endpoint (e.g., shipping quotes, external product info).
 - In store-facade, define another REST datasource or call external-service directly. 
-- Provide a combined endpoint merging external data with local data (e.g., shipping quotes + order details). 
-- Confirm ARC’s authentication, authorization, and rate limiting still apply at the façade.
+- Provide a combined endpoint merging external data with local data (e.g., shipping quotes + order details). ✅
+- Confirm ARC’s authentication, authorization, and rate limiting still apply at the façade.✅
 Day 10:
 - Possibly switch your custom user-service to ARC’s user-service if you want advanced role/tenant capabilities.
 - Ensure the façade orchestrates both local LB4 services and ARC-based microservices consistently.
-- Remove any partial custom solutions that overlap with ARC’s modules, avoiding duplication in rate limiting or auth. 
-- Review environment variable usage across all services to confirm consistency (dev vs. staging vs. prod).
+- Remove any partial custom solutions that overlap with ARC’s modules, avoiding duplication in rate limiting or auth. ✅
+- Review environment variable usage across all services to confirm consistency (dev vs. staging vs. prod).✅
 Day 11:
 - Walk through user scenarios: 
-1) user logs in via ARC auth, 
-2) creates a product or places an order, 
+1) user logs in via ARC auth, ✅
+2) creates a product or places an order, ✅
 3) triggers an ARC-based notification if you integrated notification-service, 
-4) check if repeated calls are rate-limited. 
+4) check if repeated calls are rate-limited. ✅
 - Adjust naming or error codes for clarity (like standardizing 400 vs. 401 vs. 403, etc.). 
 - Ensure domain logic (e.g., store flows) is consistent across all microservices.
 Day 12:
@@ -89,3 +88,5 @@ Could not resolve dependency:
 -> using /whoAmI api , authorized access will make it poossible to access the respource
 
 4. Authorization will be handled by the same user service - with authorization end-points which wil check the role of user - SuperAdmin, Admin, etc.
+
+5. [facing problem] Restrict certain routes (e.g., product creation) to Admin or SuperAdmin using ARC’s decorators or metadata-based checks

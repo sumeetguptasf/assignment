@@ -10,20 +10,59 @@ const config = {
   operations: [
     {
       template: {
-        method: 'GET',
-        url: '{baseUrl}/users/{userId}',
+        method: 'POST',
+        url: '/users/signup',
+        body: '{body}',
       },
       functions: {
-        getUserById: ['userId'],
+        signup: ['body'],
+      },
+    },
+    {
+      template: {
+        method: 'POST',
+        url: '/users/login',
+        body: '{body}',
+      },
+      functions: {
+        login: ['body'],
       },
     },
     {
       template: {
         method: 'GET',
-        url: '{baseUrl}/users',
+        url: '/users/{id}',
       },
       functions: {
-        getAllUsers: [],
+        getUserById: ['id'],
+      },
+    },
+    {
+      template: {
+        method: 'PATCH',
+        url: '/users/{id}',
+        body: '{body}',
+      },
+      functions: {
+        updateUser: ['id', 'body'],
+      },
+    },
+    {
+      template: {
+        method: 'DELETE',
+        url: '/users/{id}',
+      },
+      functions: {
+        deleteUser: ['id'],
+      },
+    },
+    {
+      template: {
+        method: 'GET',
+        url: '/users',
+      },
+      functions: {
+        findAll: [],
       },
     },
   ],

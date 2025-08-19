@@ -1,0 +1,22 @@
+{
+    "defaultEnv": "master",
+    "master": {
+      "driver": "pg",
+      "host": {
+        "ENV": "ARC-USER-SERVICE_DB_HOST"
+      },
+      "port": {
+        "ENV": "ARC-USER-SERVICE_DB_PORT"
+      },
+      "user": {
+        "ENV": "ARC-USER-SERVICE_DB_USER"
+      },
+      "password": {
+        "ENV": "ARC-USER-SERVICE_DB_PASSWORD"
+      },
+      "database": {
+        "ENV": "ARC-USER-SERVICE_DB_DATABASE"
+      }
+    },
+    "sql-file": true
+}
