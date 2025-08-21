@@ -1,6 +1,6 @@
-import {inject, lifeCycleObserver, LifeCycleObserver} from '@loopback/core';
-import {juggler} from '@loopback/repository';
-import {NotifDbSourceName} from '@sourceloop/notification-service'
+import { inject, lifeCycleObserver, LifeCycleObserver } from '@loopback/core';
+import { juggler } from '@loopback/repository';
+import { NotifDbSourceName } from '@sourceloop/notification-service'
 
 const DEFAULT_MAX_CONNECTIONS = 25;
 const DEFAULT_DB_IDLE_TIMEOUT_MILLIS = 60000;
@@ -12,8 +12,8 @@ const config = {
   host: process.env.DB_HOST,
   port: process.env.DB_PORT,
   user: process.env.DB_USER,
-      schema: process.env.DB_SCHEMA,
-    password: process.env.DB_PASSWORD,
+  schema: process.env.DB_SCHEMA,
+  password: process.env.DB_PASSWORD,
   database: process.env.DB_DATABASE
 };
 
@@ -23,15 +23,15 @@ const config = {
 // Learn more at https://loopback.io/doc/en/lb4/Life-cycle.html
 @lifeCycleObserver('datasource')
 export class DbDataSource extends juggler.DataSource
- 	 implements LifeCycleObserver { 
-  
-      static dataSourceName = NotifDbSourceName;
-    	
+  implements LifeCycleObserver {
+
+  static dataSourceName = NotifDbSourceName;
+
 
   static readonly defaultConfig = config;
 
   constructor(
-    @inject('datasources.config.db', {optional: true})
+    @inject('datasources.config.db', { optional: true })
     dsConfig: object = config,
   ) {
     if (!!+(process.env.ENABLE_DB_CONNECTION_POOLING ?? 0)) {
@@ -46,7 +46,7 @@ export class DbDataSource extends juggler.DataSource
         ),
       };
 
-      dsConfig = {...dsConfig, ...dbPool};
+      dsConfig = { ...dsConfig, ...dbPool };
     }
 
     super(dsConfig);

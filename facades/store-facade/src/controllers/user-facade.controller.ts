@@ -66,4 +66,13 @@ export class UserFacadeController {
     return this.userService.findAll();
   }
 
+  @authenticate('jwt')
+  @get('/whoami')
+  async whoAmI(
+    @inject(AuthenticationBindings.CURRENT_USER) currentUser: UserProfile,
+  ): Promise<any> {
+    console.log('Current User:', currentUser);
+    return currentUser;
+  }
+
 }

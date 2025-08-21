@@ -9,6 +9,54 @@ const config = {
   baseUrl: process.env.DB_URL || 'http://localhost:3003',
   ssl: process.env.DB_SSL === 'true' ? { rejectUnauthorized: false } : false,
   operations: [
+    // ========== ORDERS ==========
+    {
+      template: {
+        method: 'GET',
+        url: '{baseUrl}/orders',
+      },
+      functions: {
+        getAllOrders: [],
+      },
+    },
+    {
+      template: {
+        method: 'GET',
+        url: '{baseUrl}/orders/{id}',
+      },
+      functions: {
+        getOrderById: ['id'],
+      },
+    },
+    {
+      template: {
+        method: 'POST',
+        url: '{baseUrl}/orders',
+        body: '{body}',
+      },
+      functions: {
+        createOrder: ['body'],
+      },
+    },
+    {
+      template: {
+        method: 'PATCH',
+        url: '{baseUrl}/orders/{id}',
+        body: '{body}',
+      },
+      functions: {
+        updateOrder: ['id', 'body'],
+      },
+    },
+    {
+      template: {
+        method: 'DELETE',
+        url: '{baseUrl}/orders/{id}',
+      },
+      functions: {
+        deleteOrder: ['id'],
+      },
+    },
     {
       template: {
         method: 'GET',
@@ -25,6 +73,45 @@ const config = {
       },
       functions: {
         getOrdersByUserId: ['userId'],
+      },
+    },
+    // ========== ORDER ITEMS ==========
+    {
+      template: {
+        method: 'GET',
+        url: '{baseUrl}/orders/{orderId}/order-items',
+      },
+      functions: {
+        getOrderItems: ['orderId'],
+      },
+    },
+    {
+      template: {
+        method: 'POST',
+        url: '{baseUrl}/orders/{orderId}/order-items',
+        body: '{body}',
+      },
+      functions: {
+        createOrderItem: ['orderId', 'body'],
+      },
+    },
+    {
+      template: {
+        method: 'PATCH',
+        url: '{baseUrl}/orders/{orderId}/order-items',
+        body: '{body}',
+      },
+      functions: {
+        updateOrderItems: ['orderId', 'body'],
+      },
+    },
+    {
+      template: {
+        method: 'DELETE',
+        url: '{baseUrl}/orders/{orderId}/order-items',
+      },
+      functions: {
+        deleteOrderItems: ['orderId'],
       },
     },
   ],

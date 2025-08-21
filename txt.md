@@ -161,7 +161,7 @@ Take the email and password and login to get the JWT token :
 }
 Got the token :
 {
-  "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImQ3M2NhZGU0LTQzZjItNGEyNS1iNzc5LTRlMzRmMzFjMmY3MCIsImVtYWlsIjoic3VtZWV0Z3VwdGFAZXhhbXBsZS5jb20iLCJ1c2VybmFtZSI6InN1bWVldGd1cHRhIiwicm9sZSI6IlN1YnNjcmliZXIiLCJpYXQiOjE3NTUxNjQ0NDcsImV4cCI6MTc1NTI1MDg0N30.LpzpTTH6OUxr1CQ5dkJ-boEYl7-cSInoaCyl7va1Zo8"
+  "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImQ3M2NhZGU0LTQzZjItNGEyNS1iNzc5LTRlMzRmMzFjMmY3MCIsImVtYWlsIjoic3VtZWV0Z3VwdGFAZXhhbXBsZS5jb20iLCJ1c2VybmFtZSI6InN1bWVldGd1cHRhIiwicm9sZSI6IlN1YnNjcmliZXIiLCJpYXQiOjE3NTU3NjIyMTgsImV4cCI6MTc1NTg0ODYxOH0.e-hy9SS1szOQZIFJyfBkvwZnt1bQLVSVr01Nm_rWvlc"
 }
 JWT.IO : token details : 
 {
@@ -243,6 +243,8 @@ Admin , SuperAdmin, Subscriber
 
 Allowed : Admin , SuperAdmin
 User role : Subscriber ->. Access denied
+
+
 
 Learnings [IMPORTANT]
 1. 

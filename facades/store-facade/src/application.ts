@@ -15,7 +15,7 @@ import Redis from 'ioredis';
 import { rateLimitKeyGen } from './utils/rate-limit-keygen.util';
 import { redisRateLimiter } from './middleware/redis-rate-limiter.middleware';
 import { ProductServiceProvider } from './services/product.service.provider';
-import { ProductServiceDataSource, UserServiceDataSource } from './datasources';
+import { OrderServiceDataSource, ProductServiceDataSource, UserServiceDataSource } from './datasources';
 import { AuthorizationBindings, AuthorizationComponent, AuthorizationTags } from '@loopback/authorization';
 import { RolePermissionAuthorizerProvider } from './authorization/role-permission.authorizer';
 import { MyJWTService } from './services/my-token.service';
@@ -29,6 +29,8 @@ import {
   UserServiceBindings,
 } from '@loopback/authentication-jwt';
 import { RoleAuthorizationProvider } from './authorization/role.authorizer';
+import { NotificationProxyService } from './services';
+import { OrderServiceProvider } from './services/order-service.provider';
 
 export { ApplicationConfig };
 
@@ -49,7 +51,9 @@ export class StoreFacadeApplication extends BootMixin(
     this.service(ProductServiceProvider);
     this.dataSource(UserServiceDataSource);
     this.service(UserServiceProvider);
-
+    this.dataSource(OrderServiceDataSource);
+    this.service(OrderServiceProvider);
+    this.bind('services.NotificationProxyService').toClass(NotificationProxyService);
 
     this.component(AuthenticationComponent);
     // Mount jwt component

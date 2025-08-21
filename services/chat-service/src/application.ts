@@ -75,19 +75,19 @@ export class ChatServiceApplication extends BootMixin(
     this.sequence(ServiceSequence);
 
     // Add authentication component
-    this.component(AuthenticationComponent);
+    // this.component(AuthenticationComponent);
   this.component(ChatServiceComponent);
 
     // Add bearer verifier component
-    this.bind(BearerVerifierBindings.Config).to({
-      type: BearerVerifierType.service,
-    } as BearerVerifierConfig);
-    this.component(BearerVerifierComponent);
+    // this.bind(BearerVerifierBindings.Config).to({
+    //   type: BearerVerifierType.service,
+    // } as BearerVerifierConfig);
+    // this.component(BearerVerifierComponent);
     // Add authorization component
-    this.bind(AuthorizationBindings.CONFIG).to({
-      allowAlwaysPaths: ['/explorer', '/openapi.json'],
-    });
-    this.component(AuthorizationComponent);
+    // this.bind(AuthorizationBindings.CONFIG).to({
+    //   allowAlwaysPaths: ['/explorer', '/openapi.json'],
+    // });
+    // this.component(AuthorizationComponent);
 
     // Set up default home page
     this.static('/', path.join(__dirname, '../public'));

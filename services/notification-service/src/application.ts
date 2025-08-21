@@ -1,12 +1,12 @@
-import {BootMixin} from '@loopback/boot';
-import {ApplicationConfig} from '@loopback/core';
+import { BootMixin } from '@loopback/boot';
+import { ApplicationConfig } from '@loopback/core';
 import {
   RestExplorerBindings,
   RestExplorerComponent,
 } from '@loopback/rest-explorer';
 import * as dotenv from 'dotenv';
 import * as dotenvExt from 'dotenv-extended';
-import {AuthenticationComponent} from 'loopback4-authentication';
+import { AuthenticationComponent, AuthenticationBindings, authenticate } from 'loopback4-authentication';
 import {
   AuthorizationBindings,
   AuthorizationComponent,
@@ -20,14 +20,15 @@ import {
   BearerVerifierType,
   SECURITY_SCHEME_SPEC,
 } from '@sourceloop/core';
-import {NotificationServiceComponent} from '@sourceloop/notification-service'
-import {RepositoryMixin} from '@loopback/repository';
-import {RestApplication} from '@loopback/rest';
-import {ServiceMixin} from '@loopback/service-proxy';
+import { NotificationServiceComponent } from '@sourceloop/notification-service'
+import { RepositoryMixin } from '@loopback/repository';
+import { RestApplication } from '@loopback/rest';
+import { ServiceMixin } from '@loopback/service-proxy';
 import path from 'path';
 import * as openapi from './openapi.json';
+import { NoAuthProvider } from './providers/no-authentication.provider';
 
-export {ApplicationConfig};
+export { ApplicationConfig };
 
 export class NotificationServiceApplication extends BootMixin(
   ServiceMixin(RepositoryMixin(RestApplication)),
@@ -60,15 +61,15 @@ export class NotificationServiceApplication extends BootMixin(
     // To check if authorization is enabled for swagger stats or not
     const authentication =
       process.env.SWAGGER_USER && process.env.SWAGGER_PASSWORD ? true : false;
-      const obj={
-        enableObf,
-        obfPath: process.env.OBF_PATH ?? '/obf',
-        openapiSpec: openapi,
-        authentication: authentication,
-        swaggerUsername: process.env.SWAGGER_USER,
-        swaggerPassword: process.env.SWAGGER_PASSWORD,
-        
-      }
+    const obj = {
+      enableObf,
+      obfPath: process.env.OBF_PATH ?? '/obf',
+      openapiSpec: openapi,
+      authentication: authentication,
+      swaggerUsername: process.env.SWAGGER_USER,
+      swaggerPassword: process.env.SWAGGER_PASSWORD,
+
+    }
     this.bind(SFCoreBindings.config).to(obj);
 
     // Set up the custom sequence
@@ -76,18 +77,32 @@ export class NotificationServiceApplication extends BootMixin(
 
     // Add authentication component
     this.component(AuthenticationComponent);
-  this.component(NotificationServiceComponent);
+    this.component(NotificationServiceComponent);
+    this.bind(AuthenticationBindings.CONFIG).to({
+      useClientAuthenticationMiddleware: false, // 🚫 skip client auth
+      useUserAuthenticationMiddleware: false,   // 🚫 skip user auth
+      secureClient: false,                       // client is not treated as secure
+    });
+    // as AuthenticationConfig);
+    // this.component(AuthorizationComponent);
+    this.bind(AuthorizationBindings.CONFIG).to({
+      allowAlwaysPaths: ['.*'], // 👈 allow ALL paths
+    });
+
+    this.bind(AuthenticationBindings.CLIENT_AUTH_ACTION).toProvider(NoAuthProvider);
 
     // Add bearer verifier component
-    this.bind(BearerVerifierBindings.Config).to({
-      type: BearerVerifierType.service,
-    } as BearerVerifierConfig);
-    this.component(BearerVerifierComponent);
+    //   this.bind(BearerVerifierBindings.Config).to({
+    //     type: BearerVerifierType,
+    // verifierBearer: {
+    //   secret: process.env.JWT_SECRET
+    //   } as BearerVerifierConfig);
+    // this.component(BearerVerifierComponent);
     // Add authorization component
-    this.bind(AuthorizationBindings.CONFIG).to({
-      allowAlwaysPaths: ['/explorer', '/openapi.json'],
-    });
-    this.component(AuthorizationComponent);
+    // this.bind(AuthorizationBindings.CONFIG).to({
+    //   allowAlwaysPaths: ['/explorer', '/openapi.json'],
+    // });
+    
 
     // Set up default home page
     this.static('/', path.join(__dirname, '../public'));
@@ -121,7 +136,7 @@ export class NotificationServiceApplication extends BootMixin(
       components: {
         securitySchemes: SECURITY_SCHEME_SPEC,
       },
-      servers: [{url: '/'}],
+      servers: [{ url: '/' }],
     });
   }
 }

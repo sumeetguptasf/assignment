@@ -1109,40 +1109,26 @@
     },
     "/notifications": {
       "post": {
-        "x-controller-name": "NotificationController",
-        "x-operation-name": "create",
+        "x-controller-name": "MyNotificationController",
+        "x-operation-name": "sendNotification",
         "tags": [
-          "NotificationController"
-        ],
-        "security": [
-          {
-            "HTTPBearer": []
-          }
+          "MyNotificationController"
         ],
         "responses": {
           "200": {
-            "description": "Notification model instance, This API end point will be used to send the notification to the user.",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Notification"
-                }
-              }
-            }
+            "description": "Return value of MyNotificationController.sendNotification"
           }
         },
-        "description": "\n\n| Permissions |\n| ------- |\n| CreateNotification   |\n| 2   |\n",
         "requestBody": {
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/NotificationExcluding_id-isDraft_"
+                "$ref": "#/components/schemas/Notification"
               }
             }
-          },
-          "description": "This API is used to send notifications, the request body contains the object of notification model."
+          }
         },
-        "operationId": "NotificationController.create"
+        "operationId": "MyNotificationController.sendNotification"
       },
       "patch": {
         "x-controller-name": "NotificationController",

@@ -1,5 +1,5 @@
 import { inject, injectable, LifeCycleObserver } from '@loopback/core';
-import { get, param, Request } from '@loopback/rest';
+import { del, get, param, patch, post, Request, requestBody } from '@loopback/rest';
 import { getService } from '@loopback/service-proxy';
 import { ProductServiceDataSource } from '../datasources/product-service.datasource';
 import { OrderServiceDataSource } from '../datasources/order-service.datasource';
@@ -8,12 +8,11 @@ import { ProductService } from '../services/product.service.provider';
 import { OrderService } from '../services/order.service.interface';
 import { UserService } from '../services/user.service.interface';
 import { Order } from '../models/order.model';
-import { Product } from '../models';
+import { OrderItem, Product } from '../models';
 import { ratelimit } from 'loopback4-ratelimiter';
 import { User } from '../models/user.model';
 import { rateLimitKeyGen } from '../utils/rate-limit-keygen.util';
 import { authenticate, AuthenticationBindings } from '@loopback/authentication';
-// import { authorize } from '@loopback/authorization';
 import { authorize } from '@loopback/authorization';
 import { SecurityBindings } from '@loopback/security'
 import { UserProfile } from '../models'
@@ -39,13 +38,13 @@ export class StoreFacadeController implements LifeCycleObserver {
   async init(): Promise<void> {
     this.productService = await getService<ProductService>(this.productDataSource);
     this.orderService = await getService<OrderService>(this.orderDataSource);
-    this.userService = await getService<UserService>(this.orderDataSource);
+    this.userService = await getService<UserService>(this.userDataSource);
   }
 
 
   // @authenticate('jwt')
   @authorize({
-    allowedRoles: ['Admin'], 
+    allowedRoles: ['Admin'],
     voters: ['authorizationProviders.role-based-authorizer'],
   })
   @ratelimit(true, {
@@ -72,10 +71,10 @@ export class StoreFacadeController implements LifeCycleObserver {
 
   @authenticate('jwt')
   @authorize({
-    allowedRoles: ['SuperAdmin','Subscriber'],
+    allowedRoles: ['SuperAdmin', 'Subscriber'],
     voters: ['authorizationProviders.role-based-authorizer'],
   })
-    @ratelimit(true, {
+  @ratelimit(true, {
     max: 2,       // 🔹 Only 2 requests
     message: 'Too many requests, please try again later.',
     statusCode: 429,
@@ -120,12 +119,84 @@ export class StoreFacadeController implements LifeCycleObserver {
     return { user: safeUser, orders };
   }
 
+
   @authenticate('jwt')
-  @get('/whoami')
-  async whoAmI(
-    @inject(AuthenticationBindings.CURRENT_USER) currentUser: UserProfile,
-  ): Promise<any> {
-    console.log('Current User:', currentUser);
-    return currentUser;
+  @authorize({ allowedRoles: ['Admin', 'SuperAdmin', 'Subscriber'] })
+  @post('/facade/orders', {
+    responses: { '200': { description: 'Create new order' } },
+  })
+  async createOrder(
+    @requestBody() order: Order,
+  ): Promise<Order> {
+    return this.orderService.createOrder(order);
+  }
+
+  @authenticate('jwt')
+  @authorize({ allowedRoles: ['Admin', 'SuperAdmin', 'Subscriber'] })
+  @patch('/facade/orders/{id}', {
+    responses: { '200': { description: 'Update order' } },
+  })
+  async updateOrder(
+    @param.path.string('id') id: string,
+    @requestBody() order: Order,
+  ): Promise<Order | null> {
+    return this.orderService.updateOrder(id, order);
+  }
+
+  @authenticate('jwt')
+  @authorize({ allowedRoles: ['Admin', 'SuperAdmin', 'Subscriber'] })
+  @del('/facade/orders/{id}', {
+    responses: { '200': { description: 'Delete order' } },
+  })
+  async deleteOrder(
+    @param.path.string('id') id: string,
+  ): Promise<boolean> {
+    return this.orderService.deleteOrder(id);
+  }
+
+
+  // ------------------- ORDER ITEMS -------------------
+
+  @authenticate('jwt')
+  @authorize({ allowedRoles: ['Admin', 'SuperAdmin', 'Subscriber'] })
+  @get('/facade/orders/{orderId}/items')
+  async getOrderItems(
+    @param.path.string('orderId') orderId: string,
+  ): Promise<OrderItem[]> {
+    return this.orderService.getOrderItems(orderId);
+  }
+
+  @authenticate('jwt')
+  @authorize({ allowedRoles: ['Admin', 'SuperAdmin', 'Subscriber'] })
+  @post('/facade/orders/{orderId}/items')
+  async createOrderItem(
+    @param.path.string('orderId') orderId: string,
+    @requestBody() orderItem: OrderItem,
+  ): Promise<OrderItem> {
+    return this.orderService.createOrderItem(orderItem);
+  }
+
+  @authenticate('jwt')
+  @authorize({ allowedRoles: ['Admin', 'SuperAdmin', 'Subscriber'] })
+  @patch('/facade/orders/{orderId}/items')
+  async updateOrderItems(
+    @param.path.string('orderId') orderId: string,
+    @requestBody() orderItem: Partial<OrderItem>,
+  ): Promise<OrderItem | null> {
+    // Ensure orderId is set and is a string
+    const updatedOrderItem: OrderItem = {
+      ...orderItem,
+      orderId: orderId,
+    } as OrderItem;
+    return this.orderService.updateOrderItem(orderId, updatedOrderItem);
+  }
+
+  @authenticate('jwt')
+  @authorize({ allowedRoles: ['Admin', 'SuperAdmin', 'Subscriber'] })
+  @del('/facade/orders/{orderId}/items')
+  async deleteOrderItems(
+    @param.path.string('orderId') orderId: string,
+  ): Promise<boolean> {
+    return this.orderService.deleteOrderItem(orderId);
   }
 }
