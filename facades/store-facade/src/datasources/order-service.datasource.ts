@@ -8,6 +8,7 @@ const config = {
   connector: 'rest',
   baseUrl: process.env.DB_URL || 'http://localhost:3003',
   ssl: process.env.DB_SSL === 'true' ? { rejectUnauthorized: false } : false,
+  crud: true,
   operations: [
     // ========== ORDERS ==========
     {

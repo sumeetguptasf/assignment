@@ -11,8 +11,8 @@ import {
 import {inject, service} from '@loopback/core';
 import {authenticate, AuthenticationBindings} from '@loopback/authentication';
 import {securityId} from '@loopback/security';
-import {UserService, UserServiceProvider} from '../services/user-service.provider';
-import { UserProfile } from '../models';
+import {UserService, UserServiceProvider} from '../services/user.service.provider';
+import { LoginRequest, User, UserProfile } from '../models';
 
 export class UserFacadeController {
   constructor(
@@ -23,13 +23,13 @@ export class UserFacadeController {
   ) {}
 
   @post('/users/signup')
-  async signup(@requestBody() body: object) {
-    return this.userService.signup(body);
+  async signup(@requestBody() user: User) {
+    return this.userService.signup(user);
   }
 
   @post('/users/login')
-  async login(@requestBody() body: object) {
-    return this.userService.login(body);
+  async login(@requestBody() loginRequest: LoginRequest) {
+    return this.userService.login(loginRequest);
   }
 
   @authenticate('jwt')

@@ -1,4 +1,4 @@
 export * from './product.service.provider';
-export * from './order.service.interface';
-export * from './user.service.interface';
-export * from './notification-service.proxy';
+export * from './order.service.provider';
+export * from './user.service.provider';
+export * from './notification-service.provider';

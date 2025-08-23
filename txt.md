@@ -156,7 +156,7 @@ Take the email and password and login to get the JWT token :
   "password": "password"
 }
 {
-  "email": "sumeetgupta@example.com",
+  "email": "sumeet.gupta@sourcefuse.com",
   "password": "password"
 }
 Got the token :
@@ -247,4 +247,22 @@ User role : Subscriber ->. Access denied
 
 
 Learnings [IMPORTANT]
-1. 
+1. Notification : 
+```json
+  {
+  "subject": "My Facade Notification",
+  "body": "this notification body is coming from the facade service !",
+  "receiver": {
+    "to": [
+      {
+        "id": "sumeet.gupta@sourcefuse.com",
+        "name": "Sumeet Gupta"
+      }
+    ]
+  },
+  "type": 0,
+  "sentDate": "2025-08-22T08:31:54.982Z",
+  "options": {},
+  "isCritical": true
+}
+```

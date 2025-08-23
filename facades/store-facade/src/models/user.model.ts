@@ -14,19 +14,6 @@ export interface User extends IAuthUser{
   created_at?: string;
   updated_at?: string;
 }
-/**
- * {
-  "username": "sgsumeet",
-  "firstName": "Sumeet",
-  "middleName": "K",
-  "lastName": "Gupta",
-  "email": "sgsumeet@example.com",
-  "phone": "+91-7854675423",
-  "address": "New Delhi, India",
-  "role": "SuperAdmin",
-  "password": "password"
-}
- */
 
 export interface UserDTO {
   id?: string;
@@ -46,6 +33,13 @@ export interface UserProfile extends Principal {
   username: string;
   role: string;
   email: string;
+}
+export interface LoginRequest {
+  email: string;
+  password: string;
+}
+export interface LoginResponse {
+  token: string;
 }
 export function createUserProfile(payload: any): UserProfile {
   return {

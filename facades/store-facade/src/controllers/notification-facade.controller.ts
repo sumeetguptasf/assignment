@@ -1,11 +1,11 @@
 import {post, requestBody, get, param} from '@loopback/rest';
 import {inject, service} from '@loopback/core';
-import {NotificationProxyService} from '../services/notification-service.proxy';
+import {NotificationService} from '../services/notification-service.proxy';
 
 export class NotificationFacadeController {
   constructor(
-    @inject('services.NotificationProxyService')
-    private notifService: NotificationProxyService,
+    @inject('services.NotificationService')
+    private notifService: NotificationService,
   ) {}
 
   @post('/facade/notifications')

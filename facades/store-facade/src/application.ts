@@ -15,12 +15,12 @@ import Redis from 'ioredis';
 import { rateLimitKeyGen } from './utils/rate-limit-keygen.util';
 import { redisRateLimiter } from './middleware/redis-rate-limiter.middleware';
 import { ProductServiceProvider } from './services/product.service.provider';
-import { OrderServiceDataSource, ProductServiceDataSource, UserServiceDataSource } from './datasources';
+import { NotificationServiceDataSource, OrderServiceDataSource, ProductServiceDataSource, UserServiceDataSource } from './datasources';
 import { AuthorizationBindings, AuthorizationComponent, AuthorizationTags } from '@loopback/authorization';
 import { RolePermissionAuthorizerProvider } from './authorization/role-permission.authorizer';
 import { MyJWTService } from './services/my-token.service';
 import { AuthenticateActionProvider, AuthenticationBindings, registerAuthenticationStrategy } from '@loopback/authentication';
-import { UserServiceProvider } from './services/user-service.provider';
+import { UserServiceProvider } from './services/user.service.provider';
 import { AuthenticationComponent } from '@loopback/authentication';
 import {
   JWTAuthenticationComponent,
@@ -29,8 +29,8 @@ import {
   UserServiceBindings,
 } from '@loopback/authentication-jwt';
 import { RoleAuthorizationProvider } from './authorization/role.authorizer';
-import { NotificationProxyService } from './services';
-import { OrderServiceProvider } from './services/order-service.provider';
+import { NotificationService, NotificationServiceProvider } from './services';
+import { OrderServiceProvider } from './services/order.service.provider';
 
 export { ApplicationConfig };
 
@@ -53,7 +53,8 @@ export class StoreFacadeApplication extends BootMixin(
     this.service(UserServiceProvider);
     this.dataSource(OrderServiceDataSource);
     this.service(OrderServiceProvider);
-    this.bind('services.NotificationProxyService').toClass(NotificationProxyService);
+    this.dataSource(NotificationServiceDataSource);
+    this.service(NotificationServiceProvider);
 
     this.component(AuthenticationComponent);
     // Mount jwt component

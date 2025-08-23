@@ -26,3 +26,15 @@ export class LoginDto {
   @property({type: 'string', required: true})
   password: string;
 }
+
+export interface SignupRequest {
+  username: string;
+  email: string;
+  password: string;
+}
+
+export interface SignupResponse {
+  id: string;
+  username: string;
+  email: string;
+}

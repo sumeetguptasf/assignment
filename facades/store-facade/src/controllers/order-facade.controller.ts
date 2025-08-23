@@ -1,6 +1,6 @@
 import { get, post, put, del, param, requestBody, patch } from '@loopback/rest';
 import { inject } from '@loopback/core';
-import { OrderService } from '../services/order-service.provider';
+import { OrderService } from '../services/order.service.provider';
 import { Order } from '../models/order.model';
 import { authorize } from '@loopback/authorization';
 import { authenticate } from '@loopback/authentication';
@@ -49,6 +49,7 @@ export class OrderFacadeController {
     })
     @post('facade/orders')
     createOrder(@requestBody() order: Order) {
+        console.log(`Creating Order : ${order}`)
         return this.orderService.createOrder(order);
     }
 
@@ -92,6 +93,21 @@ export class OrderFacadeController {
         @requestBody() orderItem: OrderItem,
     ): Promise<OrderItem> {
         return this.orderService.createOrderItem(orderId, orderItem);
+    }
+
+    @authenticate('jwt')
+    @authorize({ allowedRoles: ['Admin', 'SuperAdmin', 'Subscriber'] })
+    @patch('/facade/orders/{orderId}/items')
+    async updateOrderItems(
+        @param.path.string('orderId') orderId: string,
+        @requestBody() orderItem: Partial<OrderItem>,
+    ): Promise<OrderItem | null> {
+        // Ensure orderId is set and is a string
+        const updatedOrderItem: OrderItem = {
+            ...orderItem,
+            orderId: orderId,
+        } as OrderItem;
+        return this.orderService.updateOrderItems(orderId, updatedOrderItem);
     }
 
     // @authenticate('jwt')

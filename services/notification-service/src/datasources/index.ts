@@ -1,2 +1,1 @@
-export * from './db.datasource';
-export * from './auth-db.datasource';
+export * from './notif-db.datasource';

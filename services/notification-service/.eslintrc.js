@@ -4,10 +4,11 @@ module.exports = {
     'no-extra-boolean-cast': 'off',
     '@typescript-eslint/interface-name-prefix': 'off',
     'no-prototype-builtins': 'off',
-    'no-await-in-loop': 'error'
-  },
-  parserOptions: {
-    project: './tsconfig.json',
-    tsconfigRootDir: __dirname,
+    '@typescript-eslint/no-misused-promises': [
+      'error',
+      {
+        checksVoidReturn: false,
+      },
+    ],
   },
 };

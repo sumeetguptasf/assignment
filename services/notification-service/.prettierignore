@@ -1,5 +1,2 @@
 dist
 *.json
-coverage
-mochawesome-report
-node_modules/
