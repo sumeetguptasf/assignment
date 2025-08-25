@@ -92,7 +92,7 @@ export class StoreFacadeController implements LifeCycleObserver {
 
   @authenticate('jwt')
   @authorize({
-    allowedRoles: ['SuperAdmin', 'Subscriber'],
+    allowedRoles: ['SuperAdmin', 'Admin', 'Subscriber'],
     voters: ['authorizationProviders.role-based-authorizer'],
   })
   @ratelimit(true, {
@@ -120,11 +120,16 @@ export class StoreFacadeController implements LifeCycleObserver {
     },
   })
   async getOrdersForUser(
+    @inject(AuthenticationBindings.CURRENT_USER) currentUser: UserProfile,
     @param.path.string('userId') userId: string,
   ): Promise<{ user: User; orders: Order[] }> {
     // const userService = await getService<UserService>(this.userDataSource);
     // const orderService = await getService<OrderService>(this.orderDataSource);
 
+    // check if the current user is requesting their own orders or has elevated privileges
+    if (currentUser.id !== userId && !currentUser.roles?.includes('Subscriber') && !currentUser.roles?.includes('SuperAdmin')) {
+      throw new Error('Access denied: You can only access your own orders.');
+    }
     // Fetch the user
     const user = await this.userService.getUserById(userId);
     if (!user) {
@@ -221,13 +226,14 @@ export class StoreFacadeController implements LifeCycleObserver {
 
     // Step 2: Send login notification
     const timestamp = new Date().toISOString();
-    await this.notificationService.sendNotification({
+  this.notificationService
+    .sendNotification({
       subject: '🔔 Login Alert',
       body: `Hi you have just logged in at ${timestamp}.`,
       receiver: {
         to: [
           {
-            id: credentials.email
+            id: credentials.email,
           },
         ],
       },
@@ -235,9 +241,13 @@ export class StoreFacadeController implements LifeCycleObserver {
       sentDate: timestamp,
       options: {},
       isCritical: false,
+    })
+    .catch(err => {
+      console.error('⚠️ Failed to send login notification:', err.message);
     });
 
-    return {token};
+  // Immediately return token regardless of notification status
+  return { token };
   }
 
 }
