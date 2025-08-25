@@ -1,8 +1,20 @@
+﻿// Copyright (c) 2023 Sourcefuse Technologies
+//
+// This software is released under the MIT License.
+// https://opensource.org/licenses/MIT
+export * from './component';
+export * from './keys';
+export * from './models';
+export * from './repositories';
+export * from './types';
+export * from './enums';
+
 import {ApplicationConfig, ChatServiceApplication} from './application';
+import * as dotenv from 'dotenv';
+dotenv.config();
 
-export * from './application';
 
-const PORT = 3000;
+const PORT = 3005;
 
 export async function main(options: ApplicationConfig = {}) {
   const app = new ChatServiceApplication(options);
